@@ -9,7 +9,7 @@
   assets/        الشعار والصور
 
 1) الرفع على GitHub Pages
-   - أنشئ حساباً على github.com ثم New repository (اسمه مثلاً alfayez-site) واجعله Public.
+   - أنشئ حساباً على github.com ثم New repository (اسمه مثلاً alfayz-site) واجعله Public.
    - اضغط Add file ثم Upload files، واسحب كل محتويات هذا المجلد (وليس المجلد نفسه)، ثم Commit.
    - من Settings ثم Pages: Source = Deploy from a branch، Branch = main، المجلد / (root)، ثم Save.
    - بعد دقيقة يظهر الرابط: https://USERNAME.github.io/alfayez-site/
