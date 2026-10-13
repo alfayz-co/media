@@ -24,9 +24,8 @@ window.CONFIG = {
 
   // قاعدة بيانات الأعمال والعروض (Supabase المجانية). املأ القيمتين بعد إنشاء المشروع (الخطوات في README).
   // المفتاح هنا هو anon/publishable العام، آمن للنشر. لا تضع service_role أبداً.
-  supabaseUrl: "yjuntpcepvrveqoqfjxf",   // مثال: https://abcdxyz.supabase.co
-  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqdW50cGNlcHZydmVxb3FmanhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE4NzA0NDMsImV4cCI6MjEwNzQ0NjQ0M30.01btbthm1jdlqMhQET7kN4-vDkO6tmWwhwwKvXqveDo",   // مثال: sb_publishable_... أو eyJ...
-
+  supabaseUrl: "https://yjuntpcepvrveqoqfjxf.supabase.co",
+supabaseKey: "sb_publishable_T2bio3vVqW2_9nOFAgdjXQ_ZHq8cw6u",
   // عناوين الخدمات هي نفسها أقسام الأعمال. لا تغيّر العنوان بعد رفع أعمال عليه.
   services: [
     { icon: "🎬", title: "تصوير البرامج", text: "تصوير برامج تلفزيونية وبودكاست بعدة كاميرات وإضاءة وصوت احترافي." },
