@@ -136,17 +136,11 @@
   <form id="chatForm"><input id="chatIn" maxlength="200" placeholder="اكتب سؤالك..." autocomplete="off"><button class="btn small">إرسال</button></form>
 </section>
 
-<script src="config.js"></script>
-<script src="app.js"></script>
-<script>// اختصار كيبورد لفتح لوحة التحكم عند الضغط على Ctrl + Shift + Z
-  document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && event.shiftKey && (event.key === 'z' || event.key === 'Z')) {
-      event.preventDefault();
-      window.location.href = 'admin.html';
-    }
-  });
-</script>
-
-</body>
-</html>
-
+// اختصار كيبورد لفتح لوحة التحكم (Ctrl + Shift + Z)
+document.addEventListener('keydown', function(event) {
+  // التحقق من ضغط Ctrl + Shift مع حرف Z أو ز (عربي أو إنجليزي)
+  if (event.ctrlKey && event.shiftKey && (event.key === 'z' || event.key === 'Z' || event.code === 'KeyZ')) {
+    event.preventDefault();
+    window.location.href = 'admin.html';
+  }
+});
