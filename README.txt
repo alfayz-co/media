@@ -12,7 +12,7 @@
    - أنشئ حساباً على github.com ثم New repository (اسمه مثلاً alfayz-site) واجعله Public.
    - اضغط Add file ثم Upload files، واسحب كل محتويات هذا المجلد (وليس المجلد نفسه)، ثم Commit.
    - من Settings ثم Pages: Source = Deploy from a branch، Branch = main، المجلد / (root)، ثم Save.
-   - بعد دقيقة يظهر الرابط: https://USERNAME.github.io/alfayez-site/
+   - بعد دقيقة يظهر الرابط: https://alfayz.github.io/alfayez-site/
    - فعّل التحقق بخطوتين على حساب GitHub (Settings ثم Password and authentication).
 
 2) تفعيل لوحة الإدارة (دخول باسم مستخدم وكلمة مرور)، مجاني بالكامل عبر Supabase
