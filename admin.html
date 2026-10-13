@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة إدارة الفايز</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' https://*.supabase.co; base-uri 'self'; object-src 'none'; form-action 'none'">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="adm">
+<main class="wrap">
+  <h1>لوحة إدارة <span data-cfg="name"></span></h1>
+
+  <section class="panel" id="loginBox">
+    <h2>تسجيل الدخول</h2>
+    <p class="hint" id="cfgWarn" hidden>لم يتم ربط قاعدة البيانات بعد. أكمل إعداد Supabase في config.js (الخطوات في README).</p>
+    <label for="email">اسم المستخدم (البريد الإلكتروني)<input id="email" type="email" dir="ltr" autocomplete="username"></label>
+    <label for="pass">كلمة المرور<input id="pass" type="password" dir="ltr" autocomplete="current-password"></label>
+    <label class="chk"><input id="remember" type="checkbox"> ابقني مسجلاً على هذا الجهاز</label>
+    <button class="btn" id="loginBtn" type="button">دخول</button>
+    <p class="msg" id="loginMsg" role="status"></p>
+  </section>
+
+  <div id="app" hidden>
+    <div class="bar">
+      <div class="tabs2">
+        <button class="t on" data-tab="works" type="button">الأعمال</button>
+        <button class="t" data-tab="ads" type="button">العروض والأخبار</button>
+      </div>
+      <button class="btn ghost small" id="logout" type="button">خروج</button>
+    </div>
+    <p class="msg" id="msg" role="status"></p>
+
+    <section id="tab-works" class="panel">
+      <h2>إضافة عمل جديد</h2>
+      <label for="wTitle">عنوان العمل<input id="wTitle" maxlength="80"></label>
+      <label for="wCat">الخدمة<select id="wCat"></select></label>
+      <label for="wType">النوع
+        <select id="wType"><option value="image">صورة</option><option value="video">فيديو (ملف)</option><option value="youtube">فيديو يوتيوب (رابط)</option></select>
+      </label>
+      <label for="wFile" id="wFileBox">الملف<input id="wFile" type="file" accept="image/*"></label>
+      <label for="wYt" id="wYtBox" hidden>رابط يوتيوب<input id="wYt" dir="ltr" placeholder="https://youtu.be/..."></label>
+      <p class="hint" id="wHint">الصور تُصغَّر تلقائياً قبل الرفع. أقصى حجم للفيديو 50 ميجا. للفيديوهات الأكبر ارفعها على يوتيوب (غير مدرج) والصق الرابط.</p>
+      <button class="btn" id="wAdd" type="button">إضافة العمل</button>
+      <h2>الأعمال الحالية</h2>
+      <div class="list" id="wList"></div>
+    </section>
+
+    <section id="tab-ads" class="panel" hidden>
+      <h2>إضافة عرض أو خبر</h2>
+      <label for="aTitle">العنوان<input id="aTitle" maxlength="80" placeholder="عرض اليوم الوطني"></label>
+      <label for="aText">النص<textarea id="aText" rows="3" maxlength="240"></textarea></label>
+      <div class="two">
+        <label for="aStart">يبدأ في<input id="aStart" type="date"></label>
+        <label for="aEnd">ينتهي في<input id="aEnd" type="date"></label>
+      </div>
+      <p class="hint">اترك التاريخين فارغين ليظهر دائماً. بعد تاريخ الانتهاء يختفي العرض تلقائياً.</p>
+      <label for="aBtn">نص الزر<input id="aBtn" maxlength="30" value="تواصل معنا"></label>
+      <label for="aUrl">وجهة الزر
+        <select id="aUrl"><option value="#contact">نموذج التواصل</option><option value="wa">واتساب</option></select>
+      </label>
+      <label for="aImg">صورة (اختياري)<input id="aImg" type="file" accept="image/*"></label>
+      <label class="chk"><input id="aPop" type="checkbox" checked> يظهر كنافذة منبثقة عند دخول الموقع</label>
+      <button class="btn" id="aAdd" type="button">نشر العرض</button>
+      <h2>العروض الحالية</h2>
+      <div class="list" id="aList"></div>
+    </section>
+  </div>
+</main>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
