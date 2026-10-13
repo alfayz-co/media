@@ -1,5 +1,4 @@
 -- الصق هذا الملف كاملاً في Supabase: SQL Editor ثم New query ثم Run
--- استبدل كلمة OWNER_EMAIL ببريدك (نفس بريد حساب المدير الذي ستنشئه) في كل مكان: استخدم Find and Replace
 
 create table if not exists public.works (
   id uuid primary key default gen_random_uuid(),
@@ -9,6 +8,7 @@ create table if not exists public.works (
   src text not null default '',
   created_at timestamptz not null default now()
 );
+
 create table if not exists public.ads (
   id uuid primary key default gen_random_uuid(),
   title text not null check (char_length(title) between 2 and 80),
@@ -31,9 +31,9 @@ create policy "ads read" on public.ads for select using (true);
 
 -- الكتابة لحسابك أنت فقط (حتى لو أحد أنشأ حساباً آخر لن يستطيع التعديل)
 create policy "works write" on public.works for all to authenticated
-  using ((auth.jwt() ->> 'email') = 'OWNER_EMAIL') with check ((auth.jwt() ->> 'email') = 'OWNER_EMAIL');
+  using ((auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com') with check ((auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com');
 create policy "ads write" on public.ads for all to authenticated
-  using ((auth.jwt() ->> 'email') = 'OWNER_EMAIL') with check ((auth.jwt() ->> 'email') = 'OWNER_EMAIL');
+  using ((auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com') with check ((auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com');
 
 -- مخزن الصور والفيديو (عام للقراءة، الرفع لحسابك فقط، أقصى حجم 50 ميجا)
 insert into storage.buckets (id, name, public, file_size_limit)
@@ -42,6 +42,6 @@ on conflict (id) do update set public = true, file_size_limit = 52428800;
 
 create policy "media read" on storage.objects for select using (bucket_id = 'media');
 create policy "media write" on storage.objects for insert to authenticated
-  with check (bucket_id = 'media' and (auth.jwt() ->> 'email') = 'OWNER_EMAIL');
+  with check (bucket_id = 'media' and (auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com');
 create policy "media delete" on storage.objects for delete to authenticated
-  using (bucket_id = 'media' and (auth.jwt() ->> 'email') = 'OWNER_EMAIL');
+  using (bucket_id = 'media' and (auth.jwt() ->> 'email') = 'kemo.alfayz@gmail.com');
