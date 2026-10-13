@@ -138,5 +138,16 @@
 
 <script src="config.js"></script>
 <script src="app.js"></script>
+<script>
+  // اختصار كيبورد لفتح لوحة التحكم عند الضغط على Ctrl + Shift + Z
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.shiftKey && (event.key === 'z' || event.key === 'Z')) {
+      event.preventDefault();
+      window.location.href = 'admin.html';
+    }
+  });
+</script>
+
 </body>
 </html>
+
