@@ -30,6 +30,11 @@
       <div class="tabs2">
         <button class="t on" data-tab="works" type="button">الأعمال</button>
         <button class="t" data-tab="ads" type="button">العروض والأخبار</button>
+        <button class="t" data-tab="home" type="button">الرئيسية</button>
+        <button class="t" data-tab="pages" type="button">الصفحات</button>
+        <button class="t" data-tab="services" type="button">الخدمات</button>
+        <button class="t" data-tab="brand" type="button">الهوية</button>
+        <button class="t" data-tab="contact" type="button">التواصل</button>
       </div>
       <button class="btn ghost small" id="logout" type="button">خروج</button>
     </div>
@@ -40,11 +45,17 @@
       <label for="wTitle">عنوان العمل<input id="wTitle" maxlength="80"></label>
       <label for="wCat">الخدمة<select id="wCat"></select></label>
       <label for="wType">النوع
-        <select id="wType"><option value="image">صورة</option><option value="video">فيديو (ملف)</option><option value="youtube">فيديو يوتيوب (رابط)</option></select>
+        <select id="wType">
+          <option value="image">صورة (ملف)</option><option value="video">فيديو (ملف)</option>
+          <option value="youtube">يوتيوب (رابط)</option><option value="tiktok">تيك توك (رابط)</option>
+          <option value="instagram">إنستجرام (رابط)</option><option value="vimeo">فيمو (رابط)</option>
+          <option value="facebook">فيسبوك (رابط)</option><option value="link">منصة أخرى (رابط)</option>
+        </select>
       </label>
       <label for="wFile" id="wFileBox">الملف<input id="wFile" type="file" accept="image/*"></label>
-      <label for="wYt" id="wYtBox" hidden>رابط يوتيوب<input id="wYt" dir="ltr" placeholder="https://youtu.be/..."></label>
-      <p class="hint" id="wHint">الصور تُصغَّر تلقائياً قبل الرفع. أقصى حجم للفيديو 50 ميجا. للفيديوهات الأكبر ارفعها على يوتيوب (غير مدرج) والصق الرابط.</p>
+      <label for="wYt" id="wYtBox" hidden>الرابط<input id="wYt" dir="ltr" maxlength="500" placeholder="https://..."></label>
+      <label for="wThumb" id="wThumbBox" hidden>صورة غلاف (اختياري، تظهر في الشريط والمعرض)<input id="wThumb" type="file" accept="image/*"></label>
+      <p class="hint" id="wHint">الصور تُصغَّر تلقائياً قبل الرفع. أقصى حجم للفيديو 50 ميجا. للفيديوهات الأكبر ارفعها على يوتيوب (غير مدرج) والصق الرابط. تيك توك وإنستجرام: انسخ رابط الفيديو الكامل من المتصفح (الروابط المختصرة تُفتح في نافذة المنصة بدل التشغيل داخل الموقع).</p>
       <button class="btn" id="wAdd" type="button">إضافة العمل</button>
       <h2>الأعمال الحالية</h2>
       <div class="list" id="wList"></div>
@@ -69,9 +80,41 @@
       <h2>العروض الحالية</h2>
       <div class="list" id="aList"></div>
     </section>
+
+    <section id="tab-home" class="panel" hidden>
+      <h2>الصفحة الرئيسية</h2>
+      <p class="hint">عدّل النصوص والأرقام وصورة الخلفية. أي خانة تتركها فارغة يُستخدم النص الافتراضي.</p>
+      <div class="fields" id="f-home"></div>
+      <button class="btn" data-save="home" type="button">حفظ التغييرات</button>
+    </section>
+    <section id="tab-pages" class="panel" hidden>
+      <h2>صفحتا الأعمال والعروض</h2>
+      <p class="hint">عناوين ونصوص صفحة الأعمال وصفحة العروض.</p>
+      <div class="fields" id="f-pages"></div>
+      <button class="btn" data-save="pages" type="button">حفظ التغييرات</button>
+    </section>
+    <section id="tab-services" class="panel" hidden>
+      <h2>الخدمات</h2>
+      <p class="hint">أضف أو عدّل أو احذف الخدمات. اسم الخدمة هو قسم الأعمال: إذا غيّرته تُنقل أعماله تلقائياً للاسم الجديد.</p>
+      <div class="fields" id="f-services"></div>
+      <button class="btn" data-save="services" type="button">حفظ التغييرات</button>
+    </section>
+    <section id="tab-brand" class="panel" hidden>
+      <h2>الهوية</h2>
+      <p class="hint">اسم الشركة والشعار واللون الرئيسي للموقع.</p>
+      <div class="fields" id="f-brand"></div>
+      <button class="btn" data-save="brand" type="button">حفظ التغييرات</button>
+    </section>
+    <section id="tab-contact" class="panel" hidden>
+      <h2>التواصل</h2>
+      <p class="hint">الجوال والواتساب والعنوان وحسابات السوشيال ونصوص المساعد الآلي.</p>
+      <div class="fields" id="f-contact"></div>
+      <button class="btn" data-save="contact" type="button">حفظ التغييرات</button>
+    </section>
   </div>
 </main>
 <script src="config.js"></script>
+<script src="lib.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

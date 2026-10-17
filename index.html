@@ -7,7 +7,7 @@
 <meta name="description" content="الفايز: إنتاج إعلامي في الرياض. تصوير البرامج والإعلانات، التسويق بالإسبونسر، تغطية الحفلات والفعاليات، المونتاج، الجرافيك، وتصوير العقارات.">
 <meta name="theme-color" content="#0d0c0b">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.supabase.co; media-src 'self' https://*.supabase.co; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://api.web3forms.com https://*.supabase.co; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.supabase.co; media-src 'self' https://*.supabase.co; frame-src https://www.youtube-nocookie.com https://www.tiktok.com https://www.instagram.com https://player.vimeo.com https://www.facebook.com; connect-src 'self' https://api.web3forms.com https://*.supabase.co; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'">
 <link rel="icon" href="assets/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
 <body data-page="home">
 
 <header class="top" id="top">
-  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
+  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" data-logo="logoMark" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
   <button class="burger" id="burger" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav id="nav">
     <a href="index.html" class="on">الرئيسية</a>
@@ -35,22 +35,22 @@
   <div class="hero-main">
     <div class="hero-in">
       <p class="eyebrow" data-cfg="tagline">إنتاج إعلامي</p>
-      <h1>نصوّر قصتك<br><em>بجودة سينمائية</em></h1>
-      <p class="lead">برامج، إعلانات، حفلات وفعاليات، عقارات، ومونتاج وجرافيك. من الفكرة إلى النسخة النهائية في مكان واحد.</p>
+      <h1><span data-t="hero.title1">نصوّر قصتك</span><br><em data-t="hero.title2">بجودة سينمائية</em></h1>
+      <p class="lead" data-t="hero.lead">برامج، إعلانات، حفلات وفعاليات، عقارات، ومونتاج وجرافيك. من الفكرة إلى النسخة النهائية في مكان واحد.</p>
       <div class="cta">
-        <a class="btn" href="#contact">ابدأ مشروعك</a>
-        <a class="btn ghost" href="works.html">شاهد أعمالنا</a>
+        <a class="btn" href="#contact" data-t="hero.btn1">ابدأ مشروعك</a>
+        <a class="btn ghost" href="works.html" data-t="hero.btn2">شاهد أعمالنا</a>
       </div>
     </div>
     <div class="orbit" aria-hidden="true">
       <i class="ring r1"></i><i class="ring r2"></i>
-      <img class="mark" src="assets/logo-mark.png" alt="" width="420" height="305">
+      <img class="mark" src="assets/logo-mark.png" data-logo="logoMark" alt="" width="420" height="305">
     </div>
   </div>
 
   <div class="strip" id="strip" hidden>
     <div class="strip-bar">
-      <b>من أعمالنا</b>
+      <b data-t="hero.stripTitle">من أعمالنا</b>
       <div class="strip-ctl" dir="ltr">
         <button type="button" id="stPrev" aria-label="العمل السابق (يسار)">&#8249;</button>
         <button type="button" id="stPause" class="pz" aria-pressed="false">إيقاف</button>
@@ -70,32 +70,32 @@
 </section>
 
 <section id="offers" class="sec offers" hidden>
-  <div class="head-row"><div><h2>العروض والأخبار</h2><p class="sub">آخر عروضنا.</p></div><a class="btn ghost small" href="offers.html">كل العروض</a></div>
+  <div class="head-row"><div><h2 data-t="texts.offersHomeTitle">العروض والأخبار</h2><p class="sub" data-t="texts.offersHomeSub">آخر عروضنا.</p></div><a class="btn ghost small" href="offers.html">كل العروض</a></div>
   <div class="ads" id="adsGrid"></div>
 </section>
 
 <section id="services" class="sec">
-  <div class="head-row"><div><h2>خدماتنا</h2><p class="sub">اضغط على أي خدمة لتشاهد أعمالها.</p></div><a class="btn ghost small" href="works.html">كل الأعمال</a></div>
+  <div class="head-row"><div><h2 data-t="texts.servicesTitle">خدماتنا</h2><p class="sub" data-t="texts.servicesSub">اضغط على أي خدمة لتشاهد أعمالها.</p></div><a class="btn ghost small" href="works.html">كل الأعمال</a></div>
   <div class="grid" id="svcGrid"></div>
 </section>
 
 <section id="about" class="sec dark about">
   <div>
-    <h2>من نحن</h2>
-    <p>الفايز فريق من المصورين والمونتيرين والمصممين في الرياض. نؤمن أن الصورة الجيدة تبيع أكثر من ألف كلمة، ونعمل مع الشركات والمنصات والأفراد لتحويل أفكارهم إلى محتوى مرئي يترك أثراً.</p>
-    <p>من تصوير البرامج والإعلانات، إلى تغطية الحفلات والفعاليات وتصوير العقارات، نجمع الجودة والسرعة والالتزام بالمواعيد.</p>
-    <ul class="ticks">
+    <h2 data-t="about.title">من نحن</h2>
+    <p data-t="about.p1">الفايز فريق من المصورين والمونتيرين والمصممين في الرياض. نؤمن أن الصورة الجيدة تبيع أكثر من ألف كلمة، ونعمل مع الشركات والمنصات والأفراد لتحويل أفكارهم إلى محتوى مرئي يترك أثراً.</p>
+    <p data-t="about.p2">من تصوير البرامج والإعلانات، إلى تغطية الحفلات والفعاليات وتصوير العقارات، نجمع الجودة والسرعة والالتزام بالمواعيد.</p>
+    <ul class="ticks" id="ticks">
       <li>معدات تصوير وإضاءة احترافية</li>
       <li>فريق متخصص في كل مرحلة من الإنتاج</li>
       <li>تسليم في الموعد وبجودة عالية</li>
     </ul>
   </div>
-  <div class="about-art"><img src="assets/logo.png" alt="شعار الفايز" width="360" height="308" loading="lazy"></div>
+  <div class="about-art"><img src="assets/logo.png" data-logo="logo" alt="شعار الفايز" width="360" height="308" loading="lazy"></div>
 </section>
 
 <section id="contact" class="sec">
-  <h2>تواصل معنا</h2>
-  <p class="sub">أرسل تفاصيل مشروعك وسنرد عليك بأقرب وقت.</p>
+  <h2 data-t="texts.contactTitle">تواصل معنا</h2>
+  <p class="sub" data-t="texts.contactSub">أرسل تفاصيل مشروعك وسنرد عليك بأقرب وقت.</p>
   <div class="contact">
     <form id="form" novalidate>
       <input type="text" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -145,6 +145,7 @@
 </section>
 
 <script src="config.js"></script>
+<script src="lib.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

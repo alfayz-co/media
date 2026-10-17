@@ -20,11 +20,36 @@
   }
   function ytId(u) { var m = String(u || "").match(/^[\w-]{11}$/) || String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? (m[1] || m[0]) : null; }
   function getJson(p) { return fetch(p, { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }); }
+  var PLAT = { tiktok: "TikTok", instagram: "Instagram", vimeo: "Vimeo", facebook: "Facebook", link: "رابط" };
+
+  function main() {
   var digits = C.whatsapp.replace(/\D/g, "");
   var wa = "https://wa.me/" + digits;
 
   // ---------- النصوص من الإعدادات ----------
   document.querySelectorAll("[data-cfg]").forEach(function (n) { n.textContent = C[n.dataset.cfg] || ""; });
+  // نصوص قابلة للتعديل من لوحة الإدارة
+  document.querySelectorAll("[data-t]").forEach(function (n) {
+    var v = ALF.getPath(C, n.dataset.t); if (typeof v === "string" && v) n.textContent = v;
+  });
+  document.querySelectorAll("[data-logo]").forEach(function (n) { var v = C[n.dataset.logo]; if (v && safePath(v)) n.src = v; });
+  if (C.logoMark && safePath(C.logoMark)) { var fav = $('link[rel="icon"]'); if (fav) fav.href = C.logoMark; }
+  if (/^#[0-9a-f]{6}$/i.test(C.accent || "")) {
+    var h = C.accent, r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16);
+    function mixw(x) { return Math.round(x + (255 - x) * 0.35); }
+    var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255, rs = document.documentElement.style;
+    rs.setProperty("--ac", h);
+    rs.setProperty("--ac2", "rgb(" + mixw(r) + "," + mixw(g) + "," + mixw(b) + ")");
+    rs.setProperty("--on-ac", lum > 0.55 ? "#150d06" : "#ffffff");
+  }
+  if ($(".hero") && C.hero && C.hero.bg && safePath(C.hero.bg)) {
+    $(".hero").style.background = 'linear-gradient(rgba(13,12,11,.78),rgba(13,12,11,.9)), url("' + C.hero.bg + '") center/cover no-repeat';
+  }
+  if ($("#ticks") && C.about.ticks && C.about.ticks.length) {
+    $("#ticks").textContent = ""; C.about.ticks.forEach(function (t) { $("#ticks").appendChild(el("li", "", t)); });
+  }
+  var T = { home: C.name + " | " + (C.tagline || "تصوير وإنتاج إعلامي"), works: C.texts.worksTitle + " | " + C.name, offers: C.texts.offersTitle + " | " + C.name };
+  document.title = T[PAGE] || document.title;
   $("#yr").textContent = new Date().getFullYear();
   $("#waFloat").href = wa;
   if ($("#waLink")) { $("#waLink").href = wa; $("#telLink").href = "tel:+" + digits; }
@@ -71,6 +96,9 @@
       var v = document.createElement("video"); v.src = w.src + "#t=0.5"; v.muted = true; v.preload = "metadata"; v.playsInline = true; d.appendChild(v); d.appendChild(el("span", "play", "▶"));
     } else if (w.type === "image" && safePath(w.src)) {
       var im2 = new Image(); im2.src = w.src; im2.alt = w.title; im2.draggable = false; if (!eager) im2.loading = "lazy"; d.appendChild(im2);
+    } else if (PLAT[w.type]) {
+      if (safePath(w.thumb)) { var im3 = new Image(); im3.src = w.thumb; im3.alt = w.title; im3.draggable = false; if (!eager) im3.loading = "lazy"; d.appendChild(im3); d.appendChild(el("span", "play", "▶")); }
+      else { d.style.setProperty("--h", (i * 37 + 20) % 22 + 14); d.appendChild(el("span", "ghost pf", PLAT[w.type])); }
     } else {
       d.style.setProperty("--h", (i * 37 + 20) % 22 + 14); d.appendChild(el("span", "ghost", "▶"));
     }
@@ -85,13 +113,27 @@
     b.addEventListener("click", function () { openLightbox(w, idx); });
     return b;
   }
+  function embedOf(w) {
+    var u = String(w.src || ""), m;
+    if (w.type === "youtube") { var id = ytId(u); return id ? { src: "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0" } : null; }
+    if (!/^https:\/\//i.test(u)) return null;
+    if (w.type === "tiktok") { m = u.match(/\/video\/(\d{8,25})/); return m ? { src: "https://www.tiktok.com/embed/v2/" + m[1], portrait: true } : null; }
+    if (w.type === "instagram") { m = u.match(/instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]+)/); return m ? { src: "https://www.instagram.com/" + (m[1] === "reels" ? "reel" : m[1]) + "/" + m[2] + "/embed", portrait: true } : null; }
+    if (w.type === "vimeo") { m = u.match(/vimeo\.com\/(?:.*\/)?(\d{6,12})/); return m ? { src: "https://player.vimeo.com/video/" + m[1] } : null; }
+    if (w.type === "facebook") { return /^https:\/\/((www|m|web)\.facebook\.com|fb\.watch)\//i.test(u) ? { src: "https://www.facebook.com/plugins/video.php?show_text=false&href=" + encodeURIComponent(u) } : null; }
+    return null;
+  }
   function openLightbox(w, i) {
     var lb = $("#lbBody"); lb.textContent = "";
-    var id = w.type === "youtube" ? ytId(w.src) : null;
-    if (id) {
+    var em = embedOf(w);
+    if (em) {
       var f = document.createElement("iframe");
-      f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0"; f.allow = "autoplay; encrypted-media; picture-in-picture"; f.allowFullscreen = true; f.title = w.title; f.className = "lb-media";
+      f.src = em.src; f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true; f.title = w.title; f.className = "lb-media" + (em.portrait ? " portrait" : "");
+      f.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
       lb.appendChild(f);
+    } else if (PLAT[w.type]) {
+      var ob = el("div", "lb-open"); if (safePath(w.thumb)) { var ti = new Image(); ti.src = w.thumb; ti.alt = w.title; ti.className = "lb-media img"; ob.appendChild(ti); }
+      var ol = el("a", "btn", "فتح الرابط في " + PLAT[w.type]); ol.href = safeUrl(w.src); ol.target = "_blank"; ol.rel = "noopener noreferrer"; ob.appendChild(ol); lb.appendChild(ob);
     } else if (w.type === "video" && safePath(w.src)) {
       var v = document.createElement("video"); v.src = w.src; v.controls = true; v.autoplay = true; v.playsInline = true; v.className = "lb-media"; lb.appendChild(v);
     } else if (w.type === "image" && safePath(w.src)) {
@@ -377,4 +419,6 @@
   if (PAGE === "home") initHome();
   else if (PAGE === "works") initWorks();
   else if (PAGE === "offers") initOffers();
+  }
+  ALF.loadSettings(C).then(function (o) { C = ALF.merge(C, o); main(); });
 })();

@@ -7,7 +7,7 @@
 <meta name="description" content="معرض أعمال الفايز: تصوير برامج وإعلانات وحفلات وعقارات ومونتاج وجرافيك في الرياض.">
 <meta name="theme-color" content="#0d0c0b">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.supabase.co; media-src 'self' https://*.supabase.co; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://api.web3forms.com https://*.supabase.co; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.supabase.co; media-src 'self' https://*.supabase.co; frame-src https://www.youtube-nocookie.com https://www.tiktok.com https://www.instagram.com https://player.vimeo.com https://www.facebook.com; connect-src 'self' https://api.web3forms.com https://*.supabase.co; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'">
 <link rel="icon" href="assets/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
 <body data-page="works">
 
 <header class="top" id="top">
-  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
+  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" data-logo="logoMark" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
   <button class="burger" id="burger" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav id="nav">
     <a href="index.html">الرئيسية</a>
@@ -31,9 +31,9 @@
 
 <main>
 <section class="page-hero">
-  <p class="eyebrow">معرض الأعمال</p>
-  <h1>أعمالنا</h1>
-  <p class="lead">اختر الخدمة لتشاهد أعمالها، واضغط على أي عمل لمشاهدته بالحجم الكامل.</p>
+  <p class="eyebrow" data-t="texts.worksEyebrow">معرض الأعمال</p>
+  <h1 data-t="texts.worksTitle">أعمالنا</h1>
+  <p class="lead" data-t="texts.worksLead">اختر الخدمة لتشاهد أعمالها، واضغط على أي عمل لمشاهدته بالحجم الكامل.</p>
 </section>
 <section class="sec pg">
   <div class="svc-tabs" id="svcTabs" role="tablist"></div>
@@ -72,6 +72,7 @@
 </section>
 
 <script src="config.js"></script>
+<script src="lib.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
