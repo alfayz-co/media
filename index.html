@@ -14,40 +14,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
 
 <header class="top" id="top">
-  <a class="brand" href="#top" aria-label="الرئيسية"><img src="assets/logo-mark.png" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
+  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
   <button class="burger" id="burger" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav id="nav">
-    <a href="#services">الخدمات والأعمال</a>
-    <a href="#offers" id="navOffers" hidden>العروض</a>
-    <a href="#about">من نحن</a>
-    <a href="#contact">تواصل معنا</a>
-    <a class="btn small" href="#contact">اطلب عرض سعر</a>
+    <a href="index.html" class="on">الرئيسية</a>
+    <a href="works.html">أعمالنا</a>
+    <a href="offers.html">العروض</a>
+    <a href="index.html#about">من نحن</a>
+    <a href="index.html#contact">تواصل معنا</a>
+    <a class="btn small" href="index.html#contact">اطلب عرض سعر</a>
   </nav>
 </header>
 
 <main>
 <section class="hero">
   <div class="rec"><i></i> REC</div>
-  <div class="hero-in">
-    <p class="eyebrow" data-cfg="tagline">إنتاج إعلامي</p>
-    <h1>نصوّر قصتك<br><em>بجودة سينمائية</em></h1>
-    <p class="lead">برامج، إعلانات، حفلات وفعاليات، عقارات، ومونتاج وجرافيك. من الفكرة إلى النسخة النهائية في مكان واحد.</p>
-    <div class="cta">
-      <a class="btn" href="#contact">ابدأ مشروعك</a>
-      <a class="btn ghost" href="#services">شاهد أعمالنا</a>
+  <div class="hero-main">
+    <div class="hero-in">
+      <p class="eyebrow" data-cfg="tagline">إنتاج إعلامي</p>
+      <h1>نصوّر قصتك<br><em>بجودة سينمائية</em></h1>
+      <p class="lead">برامج، إعلانات، حفلات وفعاليات، عقارات، ومونتاج وجرافيك. من الفكرة إلى النسخة النهائية في مكان واحد.</p>
+      <div class="cta">
+        <a class="btn" href="#contact">ابدأ مشروعك</a>
+        <a class="btn ghost" href="works.html">شاهد أعمالنا</a>
+      </div>
+    </div>
+    <div class="orbit" aria-hidden="true">
+      <i class="ring r1"></i><i class="ring r2"></i>
+      <img class="mark" src="assets/logo-mark.png" alt="" width="420" height="305">
     </div>
   </div>
-  <div class="orbit" aria-hidden="true">
-    <i class="ring r1"></i><i class="ring r2"></i>
-    <img class="mark" src="assets/logo-mark.png" alt="" width="420" height="305">
+
+  <div class="strip" id="strip" hidden>
+    <div class="strip-bar">
+      <b>من أعمالنا</b>
+      <div class="strip-ctl" dir="ltr">
+        <button type="button" id="stPrev" aria-label="العمل السابق (يسار)">&#8249;</button>
+        <button type="button" id="stPause" class="pz" aria-pressed="false">إيقاف</button>
+        <button type="button" id="stNext" aria-label="العمل التالي (يمين)">&#8250;</button>
+      </div>
+    </div>
+    <div class="strip-vp" id="stVp" tabindex="0" aria-label="شريط الأعمال"><div class="strip-track" id="stTrack"></div></div>
   </div>
   <div class="frame" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
 </section>
 
-<section class="stats" aria-label="أرقام">
+<section class="stats" id="stats" aria-label="أرقام">
   <div><strong data-count="250">0</strong><span>مشروع منجز</span></div>
   <div><strong data-count="80">0</strong><span>عميل</span></div>
   <div><strong data-count="7">0</strong><span>خدمات متخصصة</span></div>
@@ -55,20 +70,13 @@
 </section>
 
 <section id="offers" class="sec offers" hidden>
-  <h2>العروض والأخبار</h2>
-  <p class="sub">آخر عروضنا .</p>
+  <div class="head-row"><div><h2>العروض والأخبار</h2><p class="sub">آخر عروضنا.</p></div><a class="btn ghost small" href="offers.html">كل العروض</a></div>
   <div class="ads" id="adsGrid"></div>
 </section>
 
 <section id="services" class="sec">
-  <h2>خدماتنا وأعمالنا</h2>
-  <p class="sub">اختر الخدمة لتشاهد أعمالها.</p>
-  <div class="svc-tabs" id="svcTabs" role="tablist"></div>
-  <p class="svc-desc" id="svcDesc"></p>
-  <div class="marquee" id="marquee" aria-label="أعمال">
-    <div class="track" id="track"></div>
-  </div>
-  <p class="empty" id="empty" hidden>لا توجد أعمال في هذه الخدمة بعد.</p>
+  <div class="head-row"><div><h2>خدماتنا</h2><p class="sub">اضغط على أي خدمة لتشاهد أعمالها.</p></div><a class="btn ghost small" href="works.html">كل الأعمال</a></div>
+  <div class="grid" id="svcGrid"></div>
 </section>
 
 <section id="about" class="sec dark about">
@@ -110,7 +118,7 @@
 </main>
 
 <footer>
-  <span>© <span id="yr"></span> <span data-cfg="name">الفايز</span>. جميع الحقوق محفوظة.</span>
+  <span><span id="secret">©</span> <span id="yr"></span> <span data-cfg="name">الفايز</span>. جميع الحقوق محفوظة.</span>
   <span class="soc" id="soc"></span>
 </footer>
 
@@ -136,11 +144,7 @@
   <form id="chatForm"><input id="chatIn" maxlength="200" placeholder="اكتب سؤالك..." autocomplete="off"><button class="btn small">إرسال</button></form>
 </section>
 
-// اختصار كيبورد لفتح لوحة التحكم (Ctrl + Shift + Z)
-document.addEventListener('keydown', function(event) {
-  // التحقق من ضغط Ctrl + Shift مع حرف Z أو ز (عربي أو إنجليزي)
-  if (event.ctrlKey && event.shiftKey && (event.key === 'z' || event.key === 'Z' || event.code === 'KeyZ')) {
-    event.preventDefault();
-    window.location.href = 'admin.html';
-  }
-});
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

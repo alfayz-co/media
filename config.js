@@ -25,7 +25,15 @@ window.CONFIG = {
   // قاعدة بيانات الأعمال والعروض (Supabase المجانية). املأ القيمتين بعد إنشاء المشروع (الخطوات في README).
   // المفتاح هنا هو anon/publishable العام، آمن للنشر. لا تضع service_role أبداً.
   supabaseUrl: "https://yjuntpcepvrveqoqfjxf.supabase.co",
-supabaseKey: "sb_publishable_T2bio3vVqW2_9nOFAgdjXQ_ZHq8cw6u",
+  supabaseKey: "sb_publishable_T2bio3vVqW2_9nOFAgdjXQ_ZHq8cw6u",
+  // الأرقام في الصفحة الرئيسية (تعدّ من 0 حتى الرقم). غيّر الأرقام إلى أرقامك الحقيقية.
+  stats: [
+    { n: 250, label: "مشروع منجز" },
+    { n: 80,  label: "عميل" },
+    { n: 7,   label: "خدمات متخصصة" },
+    { n: 5,   label: "سنوات خبرة" },
+  ],
+
   // عناوين الخدمات هي نفسها أقسام الأعمال. لا تغيّر العنوان بعد رفع أعمال عليه.
   services: [
     { icon: "🎬", title: "تصوير البرامج", text: "تصوير برامج تلفزيونية وبودكاست بعدة كاميرات وإضاءة وصوت احترافي." },

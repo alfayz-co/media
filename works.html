@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أعمالنا | الفايز</title>
+<meta name="description" content="معرض أعمال الفايز: تصوير برامج وإعلانات وحفلات وعقارات ومونتاج وجرافيك في الرياض.">
+<meta name="theme-color" content="#0d0c0b">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://*.supabase.co; media-src 'self' https://*.supabase.co; frame-src https://www.youtube-nocookie.com; connect-src 'self' https://api.web3forms.com https://*.supabase.co; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'">
+<link rel="icon" href="assets/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="works">
+
+<header class="top" id="top">
+  <a class="brand" href="index.html" aria-label="الرئيسية"><img src="assets/logo-mark.png" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
+  <button class="burger" id="burger" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav id="nav">
+    <a href="index.html">الرئيسية</a>
+    <a href="works.html" class="on">أعمالنا</a>
+    <a href="offers.html">العروض</a>
+    <a href="index.html#about">من نحن</a>
+    <a href="index.html#contact">تواصل معنا</a>
+    <a class="btn small" href="index.html#contact">اطلب عرض سعر</a>
+  </nav>
+</header>
+
+<main>
+<section class="page-hero">
+  <p class="eyebrow">معرض الأعمال</p>
+  <h1>أعمالنا</h1>
+  <p class="lead">اختر الخدمة لتشاهد أعمالها، واضغط على أي عمل لمشاهدته بالحجم الكامل.</p>
+</section>
+<section class="sec pg">
+  <div class="svc-tabs" id="svcTabs" role="tablist"></div>
+  <p class="svc-desc" id="svcDesc"></p>
+  <div class="gallery" id="wGrid"></div>
+  <p class="empty" id="empty" hidden>لا توجد أعمال في هذه الخدمة بعد.</p>
+  <div class="page-cta"><p>عجبك شغلنا؟</p><a class="btn" href="index.html#contact">ابدأ مشروعك معنا</a></div>
+</section>
+</main>
+
+<footer>
+  <span><span id="secret">©</span> <span id="yr"></span> <span data-cfg="name">الفايز</span>. جميع الحقوق محفوظة.</span>
+  <span class="soc" id="soc"></span>
+</footer>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="واتساب">واتساب</a>
+
+<div class="lightbox" id="lb" hidden><button id="lbClose" aria-label="إغلاق">×</button><div id="lbBody"></div></div>
+
+<div class="popup" id="popup" hidden role="dialog" aria-modal="true" aria-labelledby="popTitle">
+  <div class="pop-card">
+    <button id="popClose" aria-label="إغلاق">×</button>
+    <div id="popImg"></div>
+    <h3 id="popTitle"></h3>
+    <p id="popText"></p>
+    <a class="btn" id="popBtn" href="#"></a>
+  </div>
+</div>
+
+<button class="chat-fab" id="chatFab" aria-label="المساعد">💬 الدردشة</button>
+<section class="chat" id="chat" hidden aria-label="المساعد الآلي">
+  <header><b>المساعد</b><button id="chatClose" aria-label="إغلاق">×</button></header>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <div class="quick" id="quick"></div>
+  <form id="chatForm"><input id="chatIn" maxlength="200" placeholder="اكتب سؤالك..." autocomplete="off"><button class="btn small">إرسال</button></form>
+</section>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
