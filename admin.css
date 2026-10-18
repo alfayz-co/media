@@ -39,3 +39,6 @@
 .row.editing .acts{justify-content:flex-start}
 input[type=color]{padding:2px;height:44px;width:90px}
 @media(max-width:520px){.lrow .cells.c2,.lrow .cells.c3{grid-template-columns:1fr}}
+
+.lrow .cells.stack{grid-template-columns:1fr}
+.rng{display:flex;align-items:center;gap:12px}.rng input{flex:1;padding:0;height:30px}.rng output{min-width:52px;text-align:center;color:var(--ac2);font-weight:700}

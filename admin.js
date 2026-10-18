@@ -29,6 +29,7 @@
     var h = { apikey: KEY, Authorization: "Bearer " + sess.access };
     if (opt.json) { h["Content-Type"] = "application/json"; h.Prefer = "return=representation"; }
     if (opt.type) h["Content-Type"] = opt.type;
+    if (opt.prefer) h.Prefer = opt.prefer;
     return fetch(URL_ + path, { method: opt.method || "GET", headers: h, body: opt.json ? JSON.stringify(opt.json) : opt.body }).then(function (r) {
       if ((r.status === 401 || (r.status === 400 && path.indexOf("/storage/") === 0)) && !retry && sess.refresh) {
         return auth("refresh_token", { refresh_token: sess.refresh }).then(function (j) { sess = { access: j.access_token, refresh: j.refresh_token }; saveSess(!!localStorage.getItem("alf_s")); return api(path, opt, true); });
@@ -63,21 +64,7 @@
     return api("/storage/v1/object/media/" + url.slice(PUB.length), { method: "DELETE" }).catch(function () {});
   }
   function ytId(u) { var m = String(u || "").match(/^[\w-]{11}$/) || String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? (m[1] || m[0]) : null; }
-  var LINK_RE = {
-    tiktok: /^https:\/\/((www|vm|vt|m)\.)?tiktok\.com\//i,
-    instagram: /^https:\/\/(www\.)?instagram\.com\//i,
-    vimeo: /^https:\/\/((www|player)\.)?vimeo\.com\//i,
-    facebook: /^https:\/\/((www|m|web)\.facebook\.com|fb\.watch)\//i,
-    link: /^https:\/\//i
-  };
   var LINK_NAME = { youtube: "يوتيوب", tiktok: "تيك توك", instagram: "إنستجرام", vimeo: "فيمو", facebook: "فيسبوك", link: "رابط" };
-  // يرجع القيمة التي تُحفظ في العمود src أو يرمي خطأ
-  function parseLink(type, url) {
-    url = String(url || "").trim();
-    if (type === "youtube") { var id = ytId(url); if (!id) throw new Error("رابط يوتيوب غير صحيح."); return id; }
-    if (!LINK_RE[type] || !LINK_RE[type].test(url) || url.length > 500) throw new Error("الرابط غير صحيح لهذه المنصة. يجب أن يبدأ بـ https:// ويكون من " + LINK_NAME[type] + ".");
-    return url;
-  }
   function typeName(t) { return t === "image" ? "صورة" : t === "video" ? "فيديو" : (LINK_NAME[t] || t); }
 
   // ---------- واجهة ----------
@@ -121,14 +108,14 @@
     var c = el("select"); catSelect(c, w.cat);
     ef.appendChild(field("العنوان", t)); ef.appendChild(field("الخدمة", c));
     var u = null, th = null, isLink = !(w.type === "image" || w.type === "video");
-    if (isLink) { u = el("input"); u.dir = "ltr"; u.maxLength = 500; u.value = w.type === "youtube" ? "https://youtu.be/" + w.src : w.src; ef.appendChild(field("الرابط", u)); }
-    if (isLink && w.type !== "youtube") { th = el("input"); th.type = "file"; th.accept = "image/*"; ef.appendChild(field("تغيير صورة الغلاف (اختياري)", th)); }
+    if (isLink) { u = el("input"); u.dir = "ltr"; u.maxLength = 500; u.value = w.type === "youtube" ? "https://youtu.be/" + w.src : w.src; ef.appendChild(field("الرابط (أي منصة)", u)); }
+    if (isLink) { th = el("input"); th.type = "file"; th.accept = "image/*"; ef.appendChild(field("تغيير صورة الغلاف (اختياري)", th)); }
     var acts = el("div", "acts");
     var save = btn("حفظ", "btn small", function () {
       if (busy) return;
       var title = t.value.trim(); if (title.length < 2) return msg("العنوان قصير.", true);
       var patch = { title: title, cat: c.value }, oldThumb = null;
-      try { if (u) patch.src = parseLink(w.type, u.value); } catch (e) { return msg(e.message, true); }
+      try { if (u) { var dd = A.detect(u.value); patch.src = dd.src; patch.type = dd.type; } } catch (e) { return msg(e.message, true); }
       lock(save, true); msg("جارٍ الحفظ...");
       var prep = th && th.files[0] ? uploadImage(th.files[0], "works", 1200).then(function (p) { patch.thumb = p; oldThumb = w.thumb; }) : Promise.resolve();
       prep.then(function () { return api("/rest/v1/works?id=eq." + encodeURIComponent(w.id), { method: "PATCH", json: patch }); })
@@ -146,7 +133,7 @@
     var isFile = type === "image" || type === "video", src = "";
     if (title.length < 2) return msg("اكتب عنوان العمل.", true);
     if (isFile && !file) return msg("اختر الملف أولاً.", true);
-    if (!isFile) { try { src = parseLink(type, link); } catch (e) { return msg(e.message, true); } }
+    if (!isFile) { try { var det = A.detect(link); type = det.type; src = det.src; } catch (e) { return msg(e.message, true); } }
     if (type === "video" && file.size > MAX_VIDEO) return msg("حجم الفيديو أكبر من 50 ميجا. ارفعه على يوتيوب والصق الرابط.", true);
     var b = $("#wAdd"); lock(b, true); msg("جارٍ الرفع، انتظر...");
     var row = { title: title, cat: cat, type: type, src: src, thumb: "" };
@@ -245,6 +232,8 @@
       { k: "hero.btn1", l: "نص الزر الأول", m: 30 }, { k: "hero.btn2", l: "نص الزر الثاني", m: 30 },
       { k: "hero.stripTitle", l: "عنوان الشريط المتحرك", m: 40 },
       { k: "hero.bg", l: "صورة خلفية الواجهة (اختياري)", img: 1, max: 1920 },
+      { k: "hero.videoUrl", l: "فيديو الواجهة: رابط من أي منصة (يوتيوب يعمل تلقائياً، والباقي بزر تشغيل)", dir: 1, m: 500, v: function (x) { if (!x) return ""; try { A.detect(x); return ""; } catch (e) { return e.message; } } },
+      { k: "hero.videoFile", l: "أو ارفع فيديو للواجهة (حتى 50 ميجا، يعمل تلقائياً بدون صوت ومتكرر). الملف المرفوع له الأولوية.", video: 1 },
       { h: "الأرقام" },
       { k: "stats", l: "الأرقام التي تعدّ من 0", list: 1, cols: [{ k: "n", l: "الرقم", num: 1 }, { k: "label", l: "الوصف" }], max: 6 },
       { h: "من نحن" },
@@ -269,7 +258,12 @@
       { k: "name", l: "اسم الشركة", m: 40 }, { k: "tagline", l: "الشعار النصي (يظهر فوق العنوان)", m: 80 },
       { k: "logoMark", l: "شعار الهيدر والواجهة (يفضّل PNG شفاف)", img: 1, max: 800, png: 1 },
       { k: "logo", l: "شعار صفحة من نحن", img: 1, max: 800, png: 1 },
-      { k: "accent", l: "اللون الرئيسي للموقع", color: 1 }
+      { k: "accent", l: "اللون الرئيسي للموقع", color: 1 },
+      { h: "الأحجام والتأثيرات" },
+      { k: "ui.fs", l: "حجم الكتابة في الموقع كله", range: [80, 130, 5], def: 100 },
+      { k: "ui.is", l: "حجم الأيقونات (الخدمات، السوشيال، أزرار واتساب والاتصال)", range: [60, 180, 5], def: 100 },
+      { k: "ui.ss", l: "حجم الشعار والأزرار والأشكال", range: [70, 150, 5], def: 100 },
+      { k: "ui.glow", l: "ضوء خفيف يتبع مؤشر الماوس (الكمبيوتر فقط)", check: 1 }
     ],
     contact: [
       { k: "whatsapp", l: "رقم الواتساب بصيغة دولية بدون + (مثل 966507588176)", dir: 1, m: 20, v: function (x) { return /^\d{9,15}$/.test(x) ? "" : "رقم الواتساب أرقام فقط (9 إلى 15 رقماً)."; } },
@@ -280,6 +274,12 @@
       { k: "social", l: "حسابات السوشيال", list: 1, cols: [{ k: "name", l: "الاسم", m: 30 }, { k: "url", l: "الرابط (https://)", m: 300, dir: 1, https: 1 }], max: 10 },
       { k: "bot.greeting", l: "رسالة ترحيب المساعد الآلي", area: 1, m: 200 },
       { k: "bot.fallback", l: "ردّ المساعد عند عدم الفهم", area: 1, m: 200 }
+    ],
+    chat: [
+      { k: "bot.greeting", l: "رسالة الترحيب", area: 1, m: 200 },
+      { k: "bot.fallback", l: "الرد عندما لا يفهم المساعد السؤال", area: 1, m: 200 },
+      { k: "bot.quick", l: "أزرار الأسئلة السريعة (تظهر للزائر)", list: 1, scalar: 1, max: 8 },
+      { k: "bot.faq", l: "الكلمات المفتاحية والردود", list: 1, faq: 1, stack: 1, max: 80, cols: [{ k: "kw", l: "الكلمات المفتاحية (افصل بينها بفاصلة)، مثل: سعر، تكلفة، كم", m: 200 }, { k: "a", l: "الرد الآلي", m: 500, area: 1 }] }
     ]
   };
   var FIELDS = {}; // tab -> [{spec, collect}]
@@ -287,14 +287,15 @@
   function mkList(spec, items) {
     var wrap = el("div", "lst"), rows = el("div", "lst"); wrap.appendChild(rows);
     function addRow(it) {
-      var r = el("div", "lrow"), cells = el("div", "cells" + (spec.scalar ? "" : spec.cols.length === 3 ? " c3" : spec.cols.length === 2 ? " c2" : ""));
+      var r = el("div", "lrow"), cells = el("div", "cells" + (spec.scalar ? "" : spec.stack ? " stack" : spec.cols.length === 3 ? " c3" : spec.cols.length === 2 ? " c2" : ""));
       var inputs = [];
       if (spec.scalar) { var i0 = el("input"); i0.maxLength = 120; i0.value = it || ""; cells.appendChild(i0); inputs.push({ c: null, i: i0 }); }
       else spec.cols.forEach(function (c) {
-        var i = el("input"); i.maxLength = c.m || 100; i.placeholder = c.l; if (c.num) { i.type = "number"; i.min = "0"; i.max = "99999999"; i.inputMode = "numeric"; } if (c.dir) i.dir = "ltr";
+        var i = el(c.area ? "textarea" : "input"); if (c.area) i.rows = 3; i.maxLength = c.m || 100; i.placeholder = c.l; if (c.num) { i.type = "number"; i.min = "0"; i.max = "99999999"; i.inputMode = "numeric"; } if (c.dir) i.dir = "ltr";
         i.value = it && it[c.k] != null ? it[c.k] : ""; i.title = c.l; cells.appendChild(i); inputs.push({ c: c, i: i });
       });
       if (spec.track && it) r.dataset.orig = it[spec.track] || "";
+      if (it && it._dyn) { r.dataset.dyn = it._dyn; r.dataset.gen = it._gen || ""; }
       var ctl = el("div", "ctl");
       ctl.appendChild(btn("↑", "mini", function () { if (r.previousSibling) rows.insertBefore(r, r.previousSibling); }));
       ctl.appendChild(btn("↓", "mini", function () { if (r.nextSibling) rows.insertBefore(r.nextSibling, r); }));
@@ -309,7 +310,7 @@
         if (spec.scalar) { var v = r._in[0].i.value.trim(); if (v) out.push(v); return; }
         var o = {}, any = false;
         r._in.forEach(function (x) { var v = x.i.value.trim(); if (v) any = true; o[x.c.k] = x.c.num ? (v === "" ? "" : Math.max(0, Math.round(+v))) : v; });
-        if (any) { if (spec.track) o._o = r.dataset.orig || ""; out.push(o); }
+        if (any) { if (spec.track) o._o = r.dataset.orig || ""; if (r.dataset.dyn) { o._dyn = r.dataset.dyn; o._gen = r.dataset.gen; } out.push(o); }
       });
       return out;
     };
@@ -322,7 +323,9 @@
       if (spec.h) { box.appendChild(el("h3", "", spec.h)); return; }
       var cur = A.getPath(M, spec.k), f = { spec: spec }, node;
       if (spec.list) {
-        var lw = mkList(spec, Array.isArray(cur) ? cur : []); node = el("div"); node.appendChild(el("b", "", spec.l)); node.appendChild(lw);
+        var items = Array.isArray(cur) ? cur : [];
+        if (spec.faq) items = items.map(function (q) { var g = q.a == null ? dynText(q.dyn) : ""; return { kw: (q.k || []).join("، "), a: q.a == null ? g : q.a, _dyn: q.a == null ? (q.dyn || "") : "", _gen: g }; });
+        var lw = mkList(spec, items); node = el("div"); node.appendChild(el("b", "", spec.l)); node.appendChild(lw);
         f.collect = function (next, ctx) {
           var arr = lw._get();
           if (spec.min && arr.length < spec.min) throw new Error("أضف عنصراً واحداً على الأقل في: " + spec.l);
@@ -337,20 +340,40 @@
           }
           if (spec.k === "stats") arr.forEach(function (s) { if (s.n === "" || !s.label) throw new Error("أكمل الرقم والوصف في كل سطر من الأرقام."); });
           if (spec.k === "social") arr.forEach(function (s) { if (!s.name || !/^https:\/\//i.test(s.url || "")) throw new Error("رابط السوشيال يجب أن يبدأ بـ https:// ومعه اسم."); });
+          if (spec.faq) arr = arr.map(function (r) {
+            var kws = String(r.kw || "").split(/[,،\n]/).map(function (x) { return x.trim(); }).filter(Boolean);
+            if (!kws.length || !r.a) throw new Error("أكمل الكلمات المفتاحية والرد في كل سطر.");
+            return r._dyn && r.a === r._gen ? { k: kws, a: null, dyn: r._dyn } : { k: kws, a: r.a };
+          });
           arr.forEach(function (s) { delete s._o; });
           if (arr.length || spec.k === "social") A.setPath(next, spec.k, arr); else A.delPath(next, spec.k);
         };
-      } else if (spec.img) {
-        var input = el("input"); input.type = "file"; input.accept = "image/*"; f.cur = cur || ""; f.removed = false;
-        var prev = el("img"); prev.alt = ""; if (f.cur && f.cur.indexOf(PUB) === 0) prev.src = f.cur; else prev.hidden = true;
+      } else if (spec.img || spec.video) {
+        var input = el("input"); input.type = "file"; input.accept = spec.video ? "video/mp4,video/webm" : "image/*"; f.cur = cur || ""; f.removed = false;
+        var prev = el("img"); prev.alt = ""; if (spec.img && f.cur && f.cur.indexOf(PUB) === 0) prev.src = f.cur; else prev.hidden = true;
         var rm = btn("إزالة", "mini", function () { f.removed = true; input.value = ""; prev.hidden = true; });
-        var iw = el("div", "imgf"); iw.appendChild(prev); iw.appendChild(input); iw.appendChild(rm);
+        var iw = el("div", "imgf"); iw.appendChild(prev); if (spec.video && f.cur) iw.appendChild(el("small", "hint", "يوجد فيديو مرفوع حالياً")); iw.appendChild(input); iw.appendChild(rm);
         node = el("div"); node.appendChild(el("b", "", spec.l)); node.appendChild(iw);
         f.collect = function (next, ctx) {
           var file = input.files[0];
+          if (file && spec.video) {
+            if (file.size > MAX_VIDEO) throw new Error("حجم الفيديو أكبر من 50 ميجا.");
+            var vext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 4) || "mp4";
+            return upload("site/" + safeName(file.name, vext), file, file.type || "video/mp4").then(function (p) { if (f.cur) ctx.olds.push(f.cur); f.cur = p; A.setPath(next, spec.k, p); });
+          }
           if (file) return uploadImage(file, "site", spec.max || 1200, spec.png ? "image/png" : "image/jpeg").then(function (p) { if (f.cur) ctx.olds.push(f.cur); f.cur = p; A.setPath(next, spec.k, p); });
           if (f.removed) { if (f.cur) ctx.olds.push(f.cur); f.cur = ""; A.delPath(next, spec.k); }
         };
+      } else if (spec.range) {
+        var rg = el("input"); rg.type = "range"; rg.min = spec.range[0]; rg.max = spec.range[1]; rg.step = spec.range[2]; rg.value = typeof cur === "number" ? cur : spec.def;
+        var ro = el("output", "", rg.value + "%"); rg.addEventListener("input", function () { ro.textContent = rg.value + "%"; });
+        var rw = el("div", "rng"); rw.appendChild(rg); rw.appendChild(ro); rw.appendChild(btn("افتراضي", "mini", function () { rg.value = spec.def; ro.textContent = spec.def + "%"; }));
+        node = el("div"); node.appendChild(el("b", "", spec.l)); node.appendChild(rw);
+        f.collect = function (next) { if (+rg.value === spec.def) A.delPath(next, spec.k); else A.setPath(next, spec.k, +rg.value); };
+      } else if (spec.check) {
+        var ck = el("input"); ck.type = "checkbox"; ck.checked = cur !== 0;
+        node = el("label", "chk"); node.appendChild(ck); node.appendChild(document.createTextNode(" " + spec.l));
+        f.collect = function (next) { if (ck.checked) A.delPath(next, spec.k); else A.setPath(next, spec.k, 0); };
       } else if (spec.color) {
         var ci = el("input"); ci.type = "color"; ci.value = /^#[0-9a-f]{6}$/i.test(cur || "") ? cur : "#d98e45";
         var reset = btn("اللون الافتراضي", "mini", function () { ci.value = "#d98e45"; ci.dataset.reset = "1"; });
@@ -398,12 +421,76 @@
       .catch(function (e) { msg(e.message || "فشل الحفظ.", true); }).then(function () { lock(b, false); });
   }
 
+  function dynText(d) {
+    if (d === "hours") return "أوقات العمل: " + M.hours;
+    if (d === "address") return "عنواننا: " + M.address;
+    if (d === "contact") return "واتساب واتصال: " + M.phoneShow + (M.email ? " – البريد: " + M.email : "");
+    return "";
+  }
+
+  // ======================= النسخ الاحتياطي =======================
+  function download(name, text) {
+    var b = new Blob([text], { type: "application/json" }), a = document.createElement("a");
+    a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+  }
+  function makeBackup(b) {
+    if (busy) return;
+    lock(b, true); msg("جارٍ تجهيز النسخة...");
+    Promise.all([readRows("works"), readRows("ads"), api("/rest/v1/site_settings?select=data&id=eq.main")]).then(function (r) {
+      var data = { app: "alfayz-site", version: 2, created: new Date().toISOString(), settings: (r[2][0] && r[2][0].data) || {}, works: r[0], ads: r[1] };
+      download("alfayz-backup-" + new Date().toISOString().slice(0, 10) + ".json", JSON.stringify(data, null, 1));
+      msg("تم تنزيل النسخة الاحتياطية (" + r[0].length + " عمل، " + r[1].length + " عرض). احفظها في مكان آمن.");
+    }).catch(function (e) { msg(e.message || "فشل تجهيز النسخة.", true); }).then(function () { lock(b, false); });
+  }
+  var UUID = /^[0-9a-f-]{36}$/i, DATE = /^\d{4}-\d{2}-\d{2}$/;
+  function okUrl(u) { return typeof u === "string" && u.length <= 600 && (u === "" || u.indexOf(PUB) === 0 || (/^assets\/[\w\-./]+$/.test(u) && u.indexOf("..") < 0) || /^https:\/\//i.test(u)); }
+  function cleanKeys(o) { if (Array.isArray(o)) return o.map(cleanKeys); if (A.isObj(o)) { var r = {}; Object.keys(o).forEach(function (k) { if (k !== "__proto__" && k !== "constructor" && k !== "prototype") r[k] = cleanKeys(o[k]); }); return r; } return o; }
+  function sanitizeBackup(d) {
+    if (!A.isObj(d) || d.app !== "alfayz-site") throw new Error("هذا ليس ملف نسخة احتياطية من موقع الفايز.");
+    var TYPES = ["image", "video", "youtube", "tiktok", "instagram", "vimeo", "facebook", "link"], works = [], ads = [];
+    (Array.isArray(d.works) ? d.works : []).forEach(function (w) {
+      if (!A.isObj(w) || !UUID.test(w.id || "") || typeof w.title !== "string" || w.title.length < 2 || w.title.length > 80 || typeof w.cat !== "string" || !w.cat || w.cat.length > 60 || TYPES.indexOf(w.type) < 0) return;
+      var src = String(w.src || ""), okSrc = w.type === "youtube" ? /^[\w-]{11}$/.test(src) : (w.type === "image" || w.type === "video") ? (src && okUrl(src)) : /^https:\/\//i.test(src) && src.length <= 600;
+      if (!okSrc || !okUrl(String(w.thumb || ""))) return;
+      works.push({ id: w.id, title: w.title, cat: w.cat, type: w.type, src: src, thumb: String(w.thumb || ""), created_at: isNaN(Date.parse(w.created_at)) ? new Date().toISOString() : w.created_at });
+    });
+    (Array.isArray(d.ads) ? d.ads : []).forEach(function (x) {
+      if (!A.isObj(x) || !UUID.test(x.id || "") || typeof x.title !== "string" || x.title.length < 2 || x.title.length > 80 || typeof x.text !== "string" || x.text.length < 2 || x.text.length > 240 || !okUrl(String(x.image || ""))) return;
+      var bu = String(x.btn_url || "#contact"); if (!(bu === "#contact" || bu === "wa" || /^https:\/\//i.test(bu))) bu = "#contact";
+      ads.push({ id: x.id, title: x.title, text: x.text, image: String(x.image || ""), btn_text: String(x.btn_text || "تواصل معنا").slice(0, 30), btn_url: bu,
+        start_date: DATE.test(x.start_date || "") ? x.start_date : null, end_date: DATE.test(x.end_date || "") ? x.end_date : null, popup: !!x.popup,
+        created_at: isNaN(Date.parse(x.created_at)) ? new Date().toISOString() : x.created_at });
+    });
+    var settings = A.isObj(d.settings) ? cleanKeys(d.settings) : {};
+    if (JSON.stringify(settings).length > 200000) throw new Error("إعدادات النسخة كبيرة جداً.");
+    return { settings: settings, works: works, ads: ads };
+  }
+  function restoreBackup(b) {
+    if (busy) return;
+    var file = $("#bkFile").files[0];
+    if (!file) return msg("اختر ملف النسخة الاحتياطية أولاً.", true);
+    if (file.size > 5 * 1024 * 1024) return msg("الملف كبير جداً.", true);
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "اضغط مرة أخرى لتأكيد الاسترجاع"; setTimeout(function () { b.dataset.sure = ""; b.textContent = "استرجاع النسخة"; }, 6000); return; }
+    b.dataset.sure = ""; b.textContent = "استرجاع النسخة";
+    lock(b, true); msg("جارٍ الاسترجاع...");
+    file.text().then(function (txt) {
+      var d; try { d = sanitizeBackup(JSON.parse(txt)); } catch (e) { throw new Error(e.message && e.message.indexOf("ليس") >= 0 ? e.message : "الملف تالف أو ليس نسخة صحيحة."); }
+      var up = function (table, rows) { return rows.length ? api("/rest/v1/" + table + "?on_conflict=id", { method: "POST", json: rows, prefer: "resolution=merge-duplicates,return=minimal" }) : null; };
+      return persist(d.settings).then(function () { return up("works", d.works); }).then(function () { return up("ads", d.ads); }).then(function () {
+        RAW = d.settings; M = A.merge(C0, RAW); catSelect($("#wCat")); Object.keys(FORMS).forEach(buildForm);
+        return refresh();
+      }).then(function () { msg("تم الاسترجاع: " + d.works.length + " عمل، " + d.ads.length + " عرض، مع كل الإعدادات."); });
+    }).catch(function (e) { msg(e.message || "فشل الاسترجاع.", true); }).then(function () { lock(b, false); });
+  }
+
   // ---------- أحداث ----------
+  $("#bkMake").addEventListener("click", function () { makeBackup(this); });
+  $("#bkRestore").addEventListener("click", function () { restoreBackup(this); });
   $("#wType").addEventListener("change", function () {
     var t = this.value, isFile = t === "image" || t === "video";
-    $("#wFileBox").hidden = !isFile; $("#wYtBox").hidden = isFile; $("#wThumbBox").hidden = isFile || t === "youtube";
+    $("#wFileBox").hidden = !isFile; $("#wYtBox").hidden = isFile; $("#wThumbBox").hidden = isFile;
     $("#wFile").accept = t === "video" ? "video/mp4,video/webm" : "image/*";
-    $("#wYt").placeholder = t === "tiktok" ? "https://www.tiktok.com/@name/video/123..." : t === "instagram" ? "https://www.instagram.com/reel/..." : "https://...";
   });
   document.querySelectorAll(".t").forEach(function (b) {
     b.addEventListener("click", function () {

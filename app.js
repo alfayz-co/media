@@ -20,6 +20,40 @@
   }
   function ytId(u) { var m = String(u || "").match(/^[\w-]{11}$/) || String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? (m[1] || m[0]) : null; }
   function getJson(p) { return fetch(p, { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }); }
+  var ICONS = {
+    instagram: '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>',
+    facebook: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
+    youtube: '<path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>',
+    tiktok: '<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.3 2.5 2 4.2 5 4.5"/>',
+    twitter: '<path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>',
+    linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+    telegram: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+    whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+    phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    mail: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+    pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    link: '<path d="M15 7h3a5 5 0 0 1 0 10h-3m-6 0H6A5 5 0 0 1 6 7h3"/><line x1="8" y1="12" x2="16" y2="12"/>'
+  };
+  function icon(name) {
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "ico"); s.setAttribute("aria-hidden", "true");
+    s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor"); s.setAttribute("stroke-width", "2"); s.setAttribute("stroke-linecap", "round"); s.setAttribute("stroke-linejoin", "round");
+    s.innerHTML = ICONS[name] || ICONS.link; // نصوص ثابتة داخل الكود فقط
+    return s;
+  }
+  function socialKind(s) {
+    var t = (String(s.url) + " " + String(s.name)).toLowerCase();
+    if (/instagram|انستجرام|إنستجرام|انستا/.test(t)) return "instagram";
+    if (/facebook|fb\.|فيسبوك|فيس/.test(t)) return "facebook";
+    if (/tiktok|تيك/.test(t)) return "tiktok";
+    if (/youtube|youtu\.be|يوتيوب/.test(t)) return "youtube";
+    if (/twitter|x\.com|تويتر|إكس/.test(t)) return "twitter";
+    if (/linkedin|لينكد/.test(t)) return "linkedin";
+    if (/t\.me|telegram|تيليجرام|تلجرام/.test(t)) return "telegram";
+    if (/wa\.me|whatsapp|واتساب/.test(t)) return "whatsapp";
+    return "link";
+  }
   var PLAT = { tiktok: "TikTok", instagram: "Instagram", vimeo: "Vimeo", facebook: "Facebook", link: "رابط" };
 
   function main() {
@@ -42,6 +76,31 @@
     rs.setProperty("--ac2", "rgb(" + mixw(r) + "," + mixw(g) + "," + mixw(b) + ")");
     rs.setProperty("--on-ac", lum > 0.55 ? "#150d06" : "#ffffff");
   }
+  // مقاسات النصوص والأيقونات والأشكال من لوحة الإدارة
+  (function () {
+    var ui = C.ui || {}, rs2 = document.documentElement.style;
+    function pct(v, d) { v = +v; return (v >= 50 && v <= 200 ? v : d) / 100; }
+    rs2.setProperty("--fs", pct(ui.fs, 100)); rs2.setProperty("--is", pct(ui.is, 100)); rs2.setProperty("--ss", pct(ui.ss, 100));
+  })();
+  // ضوء خفيف يتبع مؤشر الماوس (للأجهزة التي فيها ماوس فقط)
+  (function () {
+    var g = $("#glow"), ui = C.ui || {};
+    if (!g || +ui.glow === 0 || reduced || !window.matchMedia("(pointer: fine)").matches) return;
+    var tx = 0, ty = 0, cx = 0, cy = 0, on = false;
+    window.addEventListener("mousemove", function (e) { tx = e.clientX; ty = e.clientY; if (!on) { on = true; cx = tx; cy = ty; g.classList.add("on"); } }, { passive: true });
+    document.addEventListener("mouseleave", function () { on = false; g.classList.remove("on"); });
+    (function loop() { cx += (tx - cx) * 0.16; cy += (ty - cy) * 0.16; g.style.transform = "translate3d(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px,0)"; requestAnimationFrame(loop); })();
+  })();
+  // الهيدر عند التمرير + ظهور الأقسام تدريجياً
+  (function () {
+    var top = $(".top"); function onS() { top.classList.toggle("scrolled", window.scrollY > 30); }
+    window.addEventListener("scroll", onS, { passive: true }); onS();
+    if (reduced || !("IntersectionObserver" in window)) return;
+    var els = document.querySelectorAll(".sec > div, .sec > h2, .sec > p, .head-row, .stats > div, .about > div, .contact > *, .cta-band > *, .social-bar > *, .foot-grid > div, .page-hero > *");
+    var io2 = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io2.unobserve(e.target); } }); }, { threshold: 0.08 });
+    els.forEach(function (n) { n.classList.add("rv"); io2.observe(n); });
+    setTimeout(function () { els.forEach(function (n) { n.classList.add("in"); }); }, 3500);
+  })();
   if ($(".hero") && C.hero && C.hero.bg && safePath(C.hero.bg)) {
     $(".hero").style.background = 'linear-gradient(rgba(13,12,11,.78),rgba(13,12,11,.9)), url("' + C.hero.bg + '") center/cover no-repeat';
   }
@@ -51,17 +110,20 @@
   var T = { home: C.name + " | " + (C.tagline || "تصوير وإنتاج إعلامي"), works: C.texts.worksTitle + " | " + C.name, offers: C.texts.offersTitle + " | " + C.name };
   document.title = T[PAGE] || document.title;
   $("#yr").textContent = new Date().getFullYear();
-  $("#waFloat").href = wa;
+  $("#waFloat").href = wa; $("#waFloat").appendChild(icon("whatsapp"));
+  $("#callFloat").href = "tel:+" + digits; $("#callFloat").appendChild(icon("phone"));
+  if ($("#ctaWa")) { $("#ctaWa").href = wa; $("#ctaTel").href = "tel:+" + digits; }
+  document.querySelectorAll("[data-ico]").forEach(function (n) { n.insertBefore(icon(n.dataset.ico), n.firstChild); });
   if ($("#waLink")) { $("#waLink").href = wa; $("#telLink").href = "tel:+" + digits; }
   if ($("#mailLink") && C.email) { $("#mailLink").hidden = false; $("#mailLink").href = "mailto:" + C.email; }
-  if ($(".info") && C.social.length) {
-    var sc = el("div", "card"); sc.appendChild(el("b", "", "تابعنا")); var sl = el("span", "sl");
-    C.social.forEach(function (s) { var x = el("a", "", s.name); x.href = safeUrl(s.url); x.target = "_blank"; x.rel = "noopener noreferrer"; sl.appendChild(x); });
-    sc.appendChild(sl); $(".info").appendChild(sc);
+  function drawSocial(box) {
+    C.social.forEach(function (x) {
+      var a = el("a", "soc-i"); a.href = safeUrl(x.url); a.target = "_blank"; a.rel = "noopener noreferrer"; a.title = x.name; a.setAttribute("aria-label", x.name);
+      a.appendChild(icon(socialKind(x))); box.appendChild(a);
+    });
   }
-  C.social.forEach(function (s) {
-    var a = el("a", "", s.name); a.href = safeUrl(s.url); a.target = "_blank"; a.rel = "noopener noreferrer"; $("#soc").appendChild(a);
-  });
+  drawSocial($("#soc"));
+  if ($("#socialBar")) { if (C.social.length) { $("#socialBar").hidden = false; drawSocial($("#socialIcons")); } }
 
   // ---------- القائمة ----------
   var burger = $("#burger"), nav = $("#nav");
@@ -243,7 +305,30 @@
     });
 
     loadWorks().then(initStrip);
+    initHeroVideo();
     initForm();
+  }
+
+  // ---------- فيديو الواجهة (رابط من أي منصة أو ملف مرفوع) ----------
+  function initHeroVideo() {
+    var hv = $("#heroVideo"), f = C.hero && C.hero.videoFile, u = C.hero && C.hero.videoUrl, node = null;
+    if (!hv) return;
+    if (f && safePath(f)) {
+      var v = document.createElement("video"); v.src = f; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.controls = true; v.preload = "metadata"; node = v;
+    } else if (u) {
+      var d; try { d = ALF.detect(u); } catch (e) { return; }
+      if (d.type === "youtube") {
+        var fr = document.createElement("iframe");
+        fr.src = "https://www.youtube-nocookie.com/embed/" + d.src + "?autoplay=1&mute=1&loop=1&playlist=" + d.src + "&rel=0&playsinline=1";
+        fr.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; fr.allowFullscreen = true; fr.title = "فيديو"; node = fr;
+      } else {
+        var w = { type: d.type, src: d.src, title: C.name, cat: "", thumb: "" };
+        var b = el("button", "hv-card"); b.type = "button"; b.setAttribute("aria-label", "تشغيل الفيديو");
+        b.appendChild(media(w, 3, true)); b.appendChild(el("span", "hv-play", "▶"));
+        b.addEventListener("click", function () { openLightbox(w, 0); }); node = b;
+      }
+    }
+    if (node) { hv.appendChild(node); hv.hidden = false; var ob = $(".orbit"); if (ob) ob.hidden = true; }
   }
 
   // ---------- الشريط المتحرك (إيقاف / تشغيل / سابق / تالي) ----------
@@ -252,7 +337,7 @@
     if (!list.length) { box.hidden = true; return; }
     box.hidden = false;
     var SPEED = 36; // بكسل في الثانية: بطيء
-    var ST = { pos: 0, last: 0, lt: 0, userPaused: reduced, hold: 0, drag: false, hover: false, smoothUntil: 0, setW: 0, step: 280 };
+    var ST = { pos: 0, last: 0, lt: 0, userPaused: reduced, hold: 0, drag: false, hover: false, touch: false, off: false, smoothUntil: 0, setW: 0, step: 280 };
     var pauseBtn = $("#stPause");
     function label() { pauseBtn.textContent = ST.userPaused ? "تشغيل" : "إيقاف"; pauseBtn.setAttribute("aria-pressed", String(ST.userPaused)); }
     label();
@@ -263,7 +348,7 @@
         for (var r = 0; r < reps; r++) list.forEach(function (w, i) { track.appendChild(card(w, i, { clone: c > 0 || r > 0, eager: true })); });
       }
     }
-    function build() {
+    function build(ratio) {
       fill(1, 1);
       var one = track.scrollWidth || 1;
       var reps = Math.max(1, Math.ceil(vp.clientWidth * 1.6 / one));
@@ -271,7 +356,7 @@
       ST.setW = track.scrollWidth / 3;
       var k = track.children;
       ST.step = k.length > 1 ? Math.abs(k[1].offsetLeft - k[0].offsetLeft) || 280 : 280;
-      ST.pos = ST.setW; vp.scrollLeft = ST.pos; ST.last = vp.scrollLeft;
+      ST.pos = ST.setW * (ratio == null ? 1 : ratio); vp.scrollLeft = ST.pos; ST.last = vp.scrollLeft;
     }
     build();
 
@@ -279,7 +364,7 @@
       var dt = ST.lt ? Math.min(64, t - ST.lt) : 16; ST.lt = t;
       var sl = vp.scrollLeft, smoothing = t < ST.smoothUntil;
       if (!smoothing && Math.abs(sl - ST.last) > 2) ST.hold = t + 2500; // المستخدم حرّك الشريط بنفسه
-      var auto = !ST.userPaused && !ST.drag && !ST.hover && !smoothing && t >= ST.hold;
+      var auto = !ST.userPaused && !ST.drag && !ST.hover && !ST.touch && !ST.off && !smoothing && t >= ST.hold;
       var wrote = false;
       if (auto) ST.pos += SPEED * dt / 1000; else ST.pos = sl;
       if (!smoothing && !ST.drag && (auto || t >= ST.hold)) {
@@ -328,8 +413,18 @@
       ST.drag = false; vp.classList.remove("grab"); ST.hold = performance.now() + 2500;
     });
     vp.addEventListener("click", function (e) { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
-    var rt = null;
-    window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 250); });
+    // اللمس: يتوقف أثناء وضع الإصبع ثم يكمل بعد 4 ثوانٍ من الرفع
+    vp.addEventListener("touchstart", function () { ST.touch = true; }, { passive: true });
+    function tEnd() { ST.touch = false; ST.hold = performance.now() + 4000; }
+    vp.addEventListener("touchend", tEnd, { passive: true }); vp.addEventListener("touchcancel", tEnd, { passive: true });
+    // لا يتحرك الشريط وهو خارج الشاشة، فيكمل من مكانه عند الرجوع إليه
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { ST.off = !es[0].isIntersecting; }, { threshold: 0 }).observe(box);
+    // إعادة البناء فقط عند تغيّر العرض فعلاً (شريط عنوان الجوال يغيّر الارتفاع فقط) وبنفس الموضع
+    var lastW = vp.clientWidth, rt = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { var w = vp.clientWidth; if (Math.abs(w - lastW) < 8) return; lastW = w; build(ST.pos / ST.setW); }, 250);
+    });
   }
 
   // ======================= صفحة الأعمال =======================

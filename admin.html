@@ -28,13 +28,15 @@
   <div id="app" hidden>
     <div class="bar">
       <div class="tabs2">
-        <button class="t on" data-tab="works" type="button">الأعمال</button>
-        <button class="t" data-tab="ads" type="button">العروض والأخبار</button>
-        <button class="t" data-tab="home" type="button">الرئيسية</button>
-        <button class="t" data-tab="pages" type="button">الصفحات</button>
-        <button class="t" data-tab="services" type="button">الخدمات</button>
-        <button class="t" data-tab="brand" type="button">الهوية</button>
-        <button class="t" data-tab="contact" type="button">التواصل</button>
+        <button class="t on" data-tab="works" type="button">🎬 الأعمال</button>
+        <button class="t" data-tab="ads" type="button">📢 العروض والأخبار</button>
+        <button class="t" data-tab="home" type="button">🏠 الرئيسية</button>
+        <button class="t" data-tab="pages" type="button">📄 الصفحات</button>
+        <button class="t" data-tab="services" type="button">🛠 الخدمات</button>
+        <button class="t" data-tab="brand" type="button">🎨 الهوية والمظهر</button>
+        <button class="t" data-tab="contact" type="button">☎ التواصل</button>
+        <button class="t" data-tab="chat" type="button">💬 الشات</button>
+        <button class="t" data-tab="backup" type="button">💾 النسخ الاحتياطي</button>
       </div>
       <button class="btn ghost small" id="logout" type="button">خروج</button>
     </div>
@@ -46,16 +48,14 @@
       <label for="wCat">الخدمة<select id="wCat"></select></label>
       <label for="wType">النوع
         <select id="wType">
-          <option value="image">صورة (ملف)</option><option value="video">فيديو (ملف)</option>
-          <option value="youtube">يوتيوب (رابط)</option><option value="tiktok">تيك توك (رابط)</option>
-          <option value="instagram">إنستجرام (رابط)</option><option value="vimeo">فيمو (رابط)</option>
-          <option value="facebook">فيسبوك (رابط)</option><option value="link">منصة أخرى (رابط)</option>
+          <option value="image">صورة (ملف من جهازك)</option><option value="video">فيديو (ملف من جهازك)</option>
+          <option value="link">رابط فيديو (يوتيوب، تيك توك، إنستجرام، فيسبوك، فيمو، أو أي منصة)</option>
         </select>
       </label>
       <label for="wFile" id="wFileBox">الملف<input id="wFile" type="file" accept="image/*"></label>
-      <label for="wYt" id="wYtBox" hidden>الرابط<input id="wYt" dir="ltr" maxlength="500" placeholder="https://..."></label>
+      <label for="wYt" id="wYtBox" hidden>رابط الفيديو (أي منصة، يُكتشف النوع تلقائياً)<input id="wYt" dir="ltr" maxlength="500" placeholder="https://..."></label>
       <label for="wThumb" id="wThumbBox" hidden>صورة غلاف (اختياري، تظهر في الشريط والمعرض)<input id="wThumb" type="file" accept="image/*"></label>
-      <p class="hint" id="wHint">الصور تُصغَّر تلقائياً قبل الرفع. أقصى حجم للفيديو 50 ميجا. للفيديوهات الأكبر ارفعها على يوتيوب (غير مدرج) والصق الرابط. تيك توك وإنستجرام: انسخ رابط الفيديو الكامل من المتصفح (الروابط المختصرة تُفتح في نافذة المنصة بدل التشغيل داخل الموقع).</p>
+      <p class="hint" id="wHint">الصور تُصغَّر تلقائياً. أقصى حجم للفيديو 50 ميجا. للرابط: انسخ رابط الفيديو الكامل من المتصفح. يوتيوب وتيك توك وإنستجرام وفيمو وفيسبوك تُشغَّل داخل الموقع، وأي منصة أخرى يظهر لها زر فتح الرابط. روابط تيك توك المختصرة (vm.tiktok.com) لا تُشغَّل داخل الموقع، استخدم الرابط الكامل.</p>
       <button class="btn" id="wAdd" type="button">إضافة العمل</button>
       <h2>الأعمال الحالية</h2>
       <div class="list" id="wList"></div>
@@ -110,6 +110,22 @@
       <p class="hint">الجوال والواتساب والعنوان وحسابات السوشيال ونصوص المساعد الآلي.</p>
       <div class="fields" id="f-contact"></div>
       <button class="btn" data-save="contact" type="button">حفظ التغييرات</button>
+    </section>
+
+    <section id="tab-chat" class="panel" hidden>
+      <h2>المساعد الآلي (الشات)</h2>
+      <p class="hint">أضف كلمات مفتاحية والرد الذي يرسله المساعد عند ظهورها في سؤال الزائر. افصل بين الكلمات بفاصلة. يختار المساعد الرد الأكثر تطابقاً.</p>
+      <div class="fields" id="f-chat"></div>
+      <button class="btn" data-save="chat" type="button">حفظ التغييرات</button>
+    </section>
+    <section id="tab-backup" class="panel" hidden>
+      <h2>نسخة احتياطية</h2>
+      <p class="hint">تشمل الأعمال والعروض وكل إعدادات الموقع (النصوص، الخدمات، الحسابات، الشات، الألوان). الصور والفيديوهات نفسها تبقى في تخزين Supabase بروابطها ولا تُنسخ داخل الملف.</p>
+      <button class="btn" id="bkMake" type="button">تنزيل نسخة احتياطية على جهازي</button>
+      <h2>استرجاع نسخة</h2>
+      <p class="hint">اختر ملف نسخة سبق تنزيله. يُدمج مع الموجود: يحدّث العناصر المتطابقة ويضيف الناقص ولا يحذف شيئاً.</p>
+      <label for="bkFile">ملف النسخة<input id="bkFile" type="file" accept=".json,application/json"></label>
+      <button class="btn ghost" id="bkRestore" type="button">استرجاع النسخة</button>
     </section>
   </div>
 </main>

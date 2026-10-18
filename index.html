@@ -46,6 +46,7 @@
       <i class="ring r1"></i><i class="ring r2"></i>
       <img class="mark" src="assets/logo-mark.png" data-logo="logoMark" alt="" width="420" height="305">
     </div>
+    <div class="hero-video" id="heroVideo" hidden></div>
   </div>
 
   <div class="strip" id="strip" hidden>
@@ -60,6 +61,11 @@
     <div class="strip-vp" id="stVp" tabindex="0" aria-label="شريط الأعمال"><div class="strip-track" id="stTrack"></div></div>
   </div>
   <div class="frame" aria-hidden="true"><b></b><b></b><b></b><b></b></div>
+</section>
+
+<section class="social-bar" id="socialBar" hidden aria-label="حساباتنا">
+  <span data-t="texts.followUs">تابعنا</span>
+  <div class="social-icons" id="socialIcons"></div>
 </section>
 
 <section class="stats" id="stats" aria-label="أرقام">
@@ -93,6 +99,11 @@
   <div class="about-art"><img src="assets/logo.png" data-logo="logo" alt="شعار الفايز" width="360" height="308" loading="lazy"></div>
 </section>
 
+<section class="cta-band">
+  <div><h2 data-t="texts.ctaTitle">جاهز تبدأ مشروعك؟</h2><p data-t="texts.ctaSub">كلمنا الآن ونرتب لك موعد وعرض سعر بدون التزام.</p></div>
+  <div class="cta-btns"><a class="btn" id="ctaWa" href="#" target="_blank" rel="noopener noreferrer">واتساب</a><a class="btn ghost" id="ctaTel" href="#">اتصل بنا</a></div>
+</section>
+
 <section id="contact" class="sec">
   <h2 data-t="texts.contactTitle">تواصل معنا</h2>
   <p class="sub" data-t="texts.contactSub">أرسل تفاصيل مشروعك وسنرد عليك بأقرب وقت.</p>
@@ -107,22 +118,41 @@
       <p class="note" id="formNote" role="status"></p>
     </form>
     <div class="info">
-      <a class="card" id="waLink" href="#" target="_blank" rel="noopener noreferrer"><b>واتساب</b><span dir="ltr" data-cfg="phoneShow"></span></a>
-      <a class="card" id="telLink" href="#"><b>اتصال</b><span dir="ltr" data-cfg="phoneShow"></span></a>
-      <a class="card" id="mailLink" href="#" hidden><b>البريد</b><span dir="ltr" data-cfg="email"></span></a>
-      <div class="card"><b>العنوان</b><span data-cfg="address"></span></div>
-      <div class="card"><b>أوقات العمل</b><span data-cfg="hours"></span></div>
+      <a class="card" id="waLink" data-ico="whatsapp" href="#" target="_blank" rel="noopener noreferrer"><b>واتساب</b><span dir="ltr" data-cfg="phoneShow"></span></a>
+      <a class="card" id="telLink" data-ico="phone" href="#"><b>اتصال</b><span dir="ltr" data-cfg="phoneShow"></span></a>
+      <a class="card" id="mailLink" data-ico="mail" href="#" hidden><b>البريد</b><span dir="ltr" data-cfg="email"></span></a>
+      <div class="card" data-ico="pin"><b>العنوان</b><span data-cfg="address"></span></div>
+      <div class="card" data-ico="clock"><b>أوقات العمل</b><span data-cfg="hours"></span></div>
     </div>
   </div>
 </section>
 </main>
 
-<footer>
-  <span><span id="secret">©</span> <span id="yr"></span> <span data-cfg="name">الفايز</span>. جميع الحقوق محفوظة.</span>
-  <span class="soc" id="soc"></span>
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="index.html"><img src="assets/logo-mark.png" data-logo="logoMark" alt="" width="40" height="29"><span data-cfg="name">الفايز</span></a>
+      <p data-cfg="tagline"></p>
+      <div class="social-icons" id="soc"></div>
+    </div>
+    <div>
+      <h4>روابط سريعة</h4>
+      <a href="index.html">الرئيسية</a><a href="works.html">أعمالنا</a><a href="offers.html">العروض</a><a href="index.html#about">من نحن</a><a href="index.html#contact">تواصل معنا</a>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <p dir="ltr" class="ltr-r" data-cfg="phoneShow"></p>
+      <p data-cfg="address"></p>
+      <p data-cfg="hours"></p>
+    </div>
+  </div>
+  <div class="foot-bottom"><span><span id="secret">©</span> <span id="yr"></span> <span data-cfg="name">الفايز</span>. جميع الحقوق محفوظة.</span></div>
 </footer>
 
-<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="واتساب">واتساب</a>
+<a class="call-float" id="callFloat" href="#" aria-label="اتصال"></a>
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener noreferrer" aria-label="واتساب"></a>
+<div class="glow" id="glow" aria-hidden="true"></div>
+
 
 <div class="lightbox" id="lb" hidden><button id="lbClose" aria-label="إغلاق">×</button><div id="lbBody"></div></div>
 
